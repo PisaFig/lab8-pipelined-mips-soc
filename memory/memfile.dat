@@ -1,0 +1,77 @@
+// MIPS Factorial Test - Corrected Machine Code
+// Format: Each line = one 32-bit word at sequential addresses
+
+// ====================
+// MAIN (words 0-5, addresses 0x00-0x14)
+// ====================
+201D0400  // Word  0 [0x00]: addi $sp, $0, 1024
+20040005  // Word  1 [0x04]: addi $a0, $0, 5
+0C000006  // Word  2 [0x08]: jal factorial (word 6)
+00408020  // Word  3 [0x0C]: add $s0, $v0, $0
+08000020  // Word  4 [0x10]: j hw_test (word 32)
+00000000  // Word  5 [0x14]: nop
+
+// ====================
+// FACTORIAL (words 6-26, addresses 0x18-0x68)
+// ====================
+23BDFFF8  // Word  6 [0x18]: factorial: addi $sp, $sp, -8
+AFBF0004  // Word  7 [0x1C]: sw $ra, 4($sp)
+AFA40000  // Word  8 [0x20]: sw $a0, 0($sp)
+28880002  // Word  9 [0x24]: slti $t0, $a0, 2
+1500000B  // Word 10 [0x28]: bne $t0, $0, +11 to base_case (word 22)
+00000000  // Word 11 [0x2C]: nop
+2084FFFF  // Word 12 [0x30]: addi $a0, $a0, -1
+0C000006  // Word 13 [0x34]: jal factorial (word 6)
+00000000  // Word 14 [0x38]: nop
+8FA40000  // Word 15 [0x3C]: lw $a0, 0($sp)
+8FBF0004  // Word 16 [0x40]: lw $ra, 4($sp)
+23BD0008  // Word 17 [0x44]: addi $sp, $sp, 8
+00820018  // Word 18 [0x48]: mult $a0, $v0
+00001012  // Word 19 [0x4C]: mflo $v0
+03E00008  // Word 20 [0x50]: jr $ra
+00000000  // Word 21 [0x54]: nop
+20020001  // Word 22 [0x58]: base_case: addi $v0, $0, 1
+8FBF0004  // Word 23 [0x5C]: lw $ra, 4($sp)
+23BD0008  // Word 24 [0x60]: addi $sp, $sp, 8
+03E00008  // Word 25 [0x64]: jr $ra
+00000000  // Word 26 [0x68]: nop
+00000000  // Word 27 [0x6C]: nop (padding)
+00000000  // Word 28 [0x70]: nop (padding)
+00000000  // Word 29 [0x74]: nop (padding)
+00000000  // Word 30 [0x78]: nop (padding)
+00000000  // Word 31 [0x7C]: nop (padding)
+
+// ====================
+// HW_TEST (words 32+, addresses 0x80+)
+// ====================
+3C080002  // Word 32 [0x80]: hw_test: lui $t0, 0x0002
+35081000  // Word 33 [0x84]: ori $t0, $t0, 0x1000
+20090005  // Word 34 [0x88]: addi $t1, $0, 5
+AD090000  // Word 35 [0x8C]: sw $t1, 0($t0)
+200A0001  // Word 36 [0x90]: addi $t2, $0, 1
+AD0A000C  // Word 37 [0x94]: sw $t2, 12($t0)
+8D0B0008  // Word 38 [0x98]: poll_hw1: lw $t3, 8($t0)
+316C0001  // Word 39 [0x9C]: andi $t4, $t3, 1
+1180FFFE  // Word 40 [0xA0]: beq $t4, $0, -2 (poll_hw1)
+00000000  // Word 41 [0xA4]: nop
+8D110004  // Word 42 [0xA8]: lw $s1, 4($t0)
+20090007  // Word 43 [0xAC]: addi $t1, $0, 7
+AD090000  // Word 44 [0xB0]: sw $t1, 0($t0)
+AD0A000C  // Word 45 [0xB4]: sw $t2, 12($t0)
+8D0B0008  // Word 46 [0xB8]: poll_hw2: lw $t3, 8($t0)
+316C0001  // Word 47 [0xBC]: andi $t4, $t3, 1
+1180FFFE  // Word 48 [0xC0]: beq $t4, $0, -2 (poll_hw2)
+00000000  // Word 49 [0xC4]: nop
+8D120004  // Word 50 [0xC8]: lw $s2, 4($t0)
+2009000A  // Word 51 [0xCC]: addi $t1, $0, 10
+AD090000  // Word 52 [0xD0]: sw $t1, 0($t0)
+AD0A000C  // Word 53 [0xD4]: sw $t2, 12($t0)
+8D0B0008  // Word 54 [0xD8]: poll_hw3: lw $t3, 8($t0)
+316C0001  // Word 55 [0xDC]: andi $t4, $t3, 1
+1180FFFE  // Word 56 [0xE0]: beq $t4, $0, -2 (poll_hw3)
+00000000  // Word 57 [0xE4]: nop
+8D130004  // Word 58 [0xE8]: lw $s3, 4($t0)
+0800003C  // Word 59 [0xEC]: j end_loop (word 60)
+00000000  // Word 60 [0xF0]: nop
+10000000  // Word 61 [0xF4]: end_loop: beq $0, $0, 0 (loop forever)
+00000000  // Word 62 [0xF8]: nop

@@ -1,0 +1,37 @@
+// Simple test program for pipelined MIPS
+// Demonstrates various pipeline scenarios
+
+// Test 1: Basic arithmetic (no hazards)
+20020005  // addi $v0, $zero, 5
+20030003  // addi $v1, $zero, 3  
+00431020  // add $v0, $v0, $v1
+ac020000  // sw $v0, 0($zero)
+
+// Test 2: Load-use hazard
+8c040004  // lw $a0, 4($zero)
+00822020  // add $a0, $a0, $v0
+ac040008  // sw $a0, 8($zero)
+
+// Test 3: Data forwarding  
+20050001  // addi $a1, $zero, 1
+00a53020  // add $a2, $a1, $a1
+00c63820  // add $a3, $a2, $a2
+
+// Test 4: Branch (taken)
+10c50001  // beq $a2, $a1, skip
+20080000  // addi $t0, $zero, 0  (should be skipped)
+20090002  // skip: addi $t1, $zero, 2
+
+// Test 5: Jump
+08000010  // j end
+200a0000  // addi $t2, $zero, 0  (should be skipped)  
+200b0000  // addi $t3, $zero, 0  (should be skipped)
+
+// Test 6: Multiplication (end label)  
+340c0004  // ori $t4, $zero, 4
+340d0006  // ori $t5, $zero, 6
+018d0018  // mult $t4, $t5
+00007012  // mflo $t6
+
+// End with infinite loop
+10000000  // beq $zero, $zero, 0  (infinite loop)
