@@ -9,6 +9,10 @@ module pipelined_mips(
     output [31:0] aluout, writedata,
     input [31:0] readdata,
     
+    // Validation wrapper interface (3rd register read port)
+    input [4:0] ra3,
+    output [31:0] rd3,
+    
     // SoC interface signals
     output [31:0] gpio_out,
     input [31:0] gpio_in,
@@ -156,10 +160,12 @@ module pipelined_mips(
         .we3(regwriteW), 
         .ra1(rsD), 
         .ra2(rtD), 
+        .ra3(ra3),  // Third read port for validation wrapper
         .wa3(writeregW),
         .wd3(resultW), 
         .rd1(srcaD), 
-        .rd2(srcbD)
+        .rd2(srcbD),
+        .rd3(rd3)   // Third read port output
     );
 
     // Sign extend

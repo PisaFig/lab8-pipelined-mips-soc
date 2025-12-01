@@ -5,10 +5,18 @@ Complete implementation of a 5-stage pipelined MIPS processor with System-on-Chi
 ## Repository Structure
 
 ```
-├── src/              # All Verilog source files (19 modules)
-├── testbench/        # Testbenches for validation
-├── memory/           # Instruction and data memory modules
-└── constraints/      # Basys3 FPGA constraints file
+├── src/                  # All Verilog source files (20 modules)
+│   └── mips_top.v        # Validation wrapper adapter
+├── testbench/            # Testbenches for validation
+├── memory/               # Instruction and data memory modules
+├── constraints/          # Basys3 FPGA constraints file
+└── validation_wrapper/   # Validation wrapper for Basys3 demo
+    ├── mips_fpga.v       # Top-level FPGA wrapper
+    ├── mips_fpga.xdc     # Constraints for validation wrapper
+    ├── clk_gen.v         # Clock generation module
+    ├── button_debouncer.v # Button debouncing
+    ├── hex_to_7seg.v     # 7-segment display decoder
+    └── led_mux.v         # LED multiplexer
 ```
 
 ## Key Components
@@ -42,10 +50,18 @@ gtkwave comprehensive_soc_testbench.vcd  # View waveforms
 
 ### Vivado Synthesis (Basys3)
 
+**Option 1: SoC Integration (soc_top)**
 1. Create new Vivado project
 2. Add all files from `src/` and `memory/`
 3. Set top module: `soc_top`
 4. Add constraint file: `constraints/soc_basys3.xdc`
+5. Run synthesis → implementation → generate bitstream
+
+**Option 2: Validation Wrapper (mips_fpga)**
+1. Create new Vivado project
+2. Add all files from `src/`, `memory/`, and `validation_wrapper/`
+3. Set top module: `mips_fpga`
+4. Add constraint file: `validation_wrapper/mips_fpga.xdc`
 5. Run synthesis → implementation → generate bitstream
 
 ## Testbenches
@@ -62,11 +78,12 @@ gtkwave comprehensive_soc_testbench.vcd  # View waveforms
 
 ## Files Included
 
-### Source Files (19 modules)
+### Source Files (20 modules)
 - Core: `pipelined_mips.v`, `datapath.v`, `controlunit.v`
 - Pipeline: `pipeline_reg.v`, `hazard_unit.v`, `forwarding_unit.v`
 - Execution: `alu.v`, `multu.v`, `hilo.v`, `regfile.v`
 - SoC: `soc_top.v`, `gpio.v`, `factorial_accel.v`
+- Validation: `mips_top.v` (adapter for validation wrapper)
 - Supporting: `adder.v`, `signext.v`, `mux2.v`, `dreg.v`, `maindec.v`, `auxdec.v`
 
 ### Memory

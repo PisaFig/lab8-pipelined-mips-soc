@@ -3,10 +3,12 @@ module regfile (
     input  wire        we3,
     input  wire [4:0]  ra1,
     input  wire [4:0]  ra2,
+    input  wire [4:0]  ra3,  // Third read port for validation wrapper
     input  wire [4:0]  wa3,
     input  wire [31:0] wd3,
     output wire [31:0] rd1,
-    output wire [31:0] rd2
+    output wire [31:0] rd2,
+    output wire [31:0] rd3  // Third read port output
 );
 
     reg [31:0] rf [0:31];
@@ -25,5 +27,6 @@ module regfile (
 
     assign rd1 = (ra1 == 5'b00000) ? 32'h00000000 : rf[ra1];
     assign rd2 = (ra2 == 5'b00000) ? 32'h00000000 : rf[ra2];
+    assign rd3 = (ra3 == 5'b00000) ? 32'h00000000 : rf[ra3];
 
 endmodule
